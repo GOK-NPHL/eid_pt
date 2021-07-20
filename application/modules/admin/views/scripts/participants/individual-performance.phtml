@@ -181,9 +181,6 @@
                                             <th>Target</th>
                                             <th>Interpretation</th>
                                             <th>Consensus</th>
-                                            <?php if (isset($sample['reference_result'])) { ?>
-                                            <th title="Reference Result">Reference</th>
-                                            <?php } ?>
                                             <th>Score</th>
                                         </tr>
                                     </thead>
@@ -209,8 +206,7 @@
                                     <td style="text-align:center;">
                                         <span>
                                             <?php 
-                                            // echo $negativePositiveResult[$sample['interpretation']]; TODO: Why is there no interpretation?
-                                            echo $negativePositiveResult[$sample['target']];
+                                            echo $negativePositiveResult[intVal($sample['interpretation'])];
                                             ?>
                                         </span>
                                     </td>
@@ -222,15 +218,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (isset($sample['reference_result'])) { ?>
-                                    <td>
-                                        <?php 
-                                        if ($sample['control'] == 0) {
-                                            echo $negativePositiveResult[$sample['reference_result']];
-                                        }
-                                        ?>
-                                    </td>
-                                    <?php } ?>
                                     <td>
                                         <?php
                                         if ($sample['control'] == 0) {

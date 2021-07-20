@@ -182,6 +182,19 @@ error_log(json_encode($params));
         // changing evaluation status 4th character to 0 = no response
         $params['evaluation_status'][3] = 0;
 
+	try{
+	  $params['shipment_receipt_date'] = '0000-00-00';
+	  $params['shipment_test_date'] = '0000-00-00';
+	  $params['shipment_test_report_date'] = '0000-00-00';
+	  $params['qc_date'] = '0000-00-00';
+	  $params['qc_created_on'] = '0000-00-00';
+	  $params['mode_id'] = null;
+	 $params['final_result'] = 0;
+
+	}catch(Exception $ex){
+		  error_log($ex->getMessage());
+	}
+
         return $this->update($params, "map_id = " . $mapId);
     }
 
