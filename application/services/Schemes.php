@@ -1,13 +1,16 @@
 <?php
 
-class Application_Service_Schemes {
+class Application_Service_Schemes
+{
 
-    public function getAllSchemes($onlyActiveScemes = false) {
+    public function getAllSchemes($onlyActiveScemes = false)
+    {
         $schemeListDb = new Application_Model_DbTable_Scheme();
         return $schemeListDb->getAllSchemes($onlyActiveScemes);
     }
 
-    public function checkResetPassword() {
+    public function checkResetPassword()
+    {
         if (isset($_SESSION)) {
             if ($_SESSION['loggedInDetails']['force_password_reset'] == 1) {
                 return true;
@@ -16,7 +19,8 @@ class Application_Service_Schemes {
         return false;
     }
 
-    public function getEidExtractionAssay() {
+    public function getEidExtractionAssay()
+    {
 
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $res = $db->fetchAll($db->select()->from('r_eid_extraction_assay'));
@@ -27,7 +31,8 @@ class Application_Service_Schemes {
         return $response;
     }
 
-    public function getEidDetectionAssay() {
+    public function getEidDetectionAssay()
+    {
 
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $res = $db->fetchAll($db->select()->from('r_eid_detection_assay'));
@@ -38,7 +43,8 @@ class Application_Service_Schemes {
         return $response;
     }
 
-    public function getVlAssay() {
+    public function getVlAssay()
+    {
 
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $res = $db->fetchAll($db->select()->from('assays'));
@@ -49,7 +55,8 @@ class Application_Service_Schemes {
         return $response;
     }
 
-    public function getDtsCorrectiveActions() {
+    public function getDtsCorrectiveActions()
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $res = $db->fetchAll($db->select()->from('r_dts_corrective_actions'));
         $response = array();
@@ -59,34 +66,38 @@ class Application_Service_Schemes {
         return $response;
     }
 
-    public function getVlReferenceData($shipmentId) {
+    public function getVlReferenceData($shipmentId)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $sql = $db->select()->from(array('reference_result_vl'))
-                ->where('shipment_id = ? ', $shipmentId);
+            ->where('shipment_id = ? ', $shipmentId);
         return $db->fetchAll($sql);
     }
 
-    public function getEidReferenceData($shipmentId) {
+    public function getEidReferenceData($shipmentId)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $sql = $db->select()->from(array('reference_result_eid'))
-                ->where('shipment_id = ? ', $shipmentId);
+            ->where('shipment_id = ? ', $shipmentId);
         return $db->fetchAll($sql);
     }
 
-    public function getEidSamples($shipmentID, $participantID, $platformID = 1, $assayID = 2) {
+    public function getEidSamples($shipmentID, $participantID, $platformID = 1, $assayID = 2)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $sql = $db->select()->from(array('ref' => 'reference_result_eid'))
-                ->join(array('s' => 'shipment'), 's.shipment_id=ref.shipment_id')
-                ->join(array('sp' => 'shipment_participant_map'), 's.shipment_id=sp.shipment_id')
-                ->joinLeft(array('res' => 'response_result_eid'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('interpretation', 'target', 'responseDate' => 'res.created_on'))
-                ->where('sp.shipment_id = ? ', $shipmentID)
-                ->where('sp.participant_id = ? ', $participantID)
-                ->where('sp.assay_id = ?', $assayID)
-                ->where('sp.platform_id = ? ', $platformID);
+            ->join(array('s' => 'shipment'), 's.shipment_id=ref.shipment_id')
+            ->join(array('sp' => 'shipment_participant_map'), 's.shipment_id=sp.shipment_id')
+            ->joinLeft(array('res' => 'response_result_eid'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('interpretation', 'target', 'responseDate' => 'res.created_on'))
+            ->where('sp.shipment_id = ? ', $shipmentID)
+            ->where('sp.participant_id = ? ', $participantID)
+            ->where('sp.assay_id = ?', $assayID)
+            ->where('sp.platform_id = ? ', $platformID);
         return $db->fetchAll($sql);
     }
 
-    public function getVlSamples($shipmentID, $participantID, $platformID = 1, $assayID = 1) {
+    public function getVlSamples($shipmentID, $participantID, $platformID = 1, $assayID = 1)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
         if ($assayID == 2) { //2 == EID
@@ -98,7 +109,7 @@ class Application_Service_Schemes {
                 ->where('sp.participant_id = ? ', $participantID)
                 ->where('sp.assay_id = ?', $assayID)
                 ->where('sp.platform_id = ? ', $platformID);
-        }else{ // 1 == VL
+        } else { // 1 == VL
 
             $sql = $db->select()->from(array('ref' => 'reference_result_vl'))
                 ->join(array('s' => 'shipment'), 's.shipment_id=ref.shipment_id')
@@ -112,7 +123,8 @@ class Application_Service_Schemes {
         return $db->fetchAll($sql);
     }
 
-    public function getAllVlPlatformResponses($shipmentID, $platformID = 1, $assayID = 1) {
+    public function getAllVlPlatformResponses($shipmentID, $platformID = 1, $assayID = 1)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         if ($assayID == 2) { //2 == EID
             $sql = $db->select()->from(array('ref' => 'reference_result_eid'), array('sample_id'))
@@ -121,7 +133,7 @@ class Application_Service_Schemes {
                 ->where('sp.shipment_id = ? ', $shipmentID)
                 ->where('sp.assay_id = ?', $assayID)
                 ->where('sp.platform_id = ? ', $platformID);
-        }else{ // 1 == VL
+        } else { // 1 == VL
             $sql = $db->select()->from(array('ref' => 'reference_result_vl'), array('sample_id'))
                 ->join(array('sp' => 'shipment_participant_map'), 'ref.shipment_id=sp.shipment_id', array('participant_id'))
                 ->join(array('res' => 'response_result_vl'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('reported_viral_load', 'is_tnd'))
@@ -132,12 +144,13 @@ class Application_Service_Schemes {
         return $db->fetchAll($sql);
     }
 
-    public function getVlRange($sId, $sampleId = null) {
+    public function getVlRange($sId, $sampleId = null)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $sql = $db->select()->from(array('rvc' => 'reference_vl_calculation'))
-                ->join(array('ref' => 'reference_result_vl'), 'rvc.sample_id = ref.sample_id', array('sample_label'))
-                ->join(array('a' => 'r_vl_assay'), 'a.id = rvc.vl_assay', array('assay_name' => 'name'))
-                ->where('rvc.shipment_id = ?', $sId);
+            ->join(array('ref' => 'reference_result_vl'), 'rvc.sample_id = ref.sample_id', array('sample_label'))
+            ->join(array('a' => 'r_vl_assay'), 'a.id = rvc.vl_assay', array('assay_name' => 'name'))
+            ->where('rvc.shipment_id = ?', $sId);
         if ($sampleId != null) {
             $sql = $sql->where('rvc.sample_id = ?', $sampleId);
         }
@@ -187,12 +200,13 @@ class Application_Service_Schemes {
         return $response;
     }
 
-    public function getVlRangeInformation($sId, $sampleId = null) {
+    public function getVlRangeInformation($sId, $sampleId = null)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $sql = $db->select()->from(array('rvc' => 'reference_vl_calculation'), array('shipment_id', 'sample_id', 'vl_assay', 'low_limit', 'high_limit', 'calculated_on', 'manual_high_limit', 'manual_low_limit', 'mean', 'sd', 'updated_on', 'use_range'))
-                ->join(array('ref' => 'reference_result_vl'), 'rvc.sample_id = ref.sample_id AND ref.shipment_id=' . $sId, array('sample_label'))
-                ->join(array('a' => 'r_vl_assay'), 'a.id = rvc.vl_assay', array('assay_name' => 'name'))
-                ->where('rvc.shipment_id = ?', $sId);
+            ->join(array('ref' => 'reference_result_vl'), 'rvc.sample_id = ref.sample_id AND ref.shipment_id=' . $sId, array('sample_label'))
+            ->join(array('a' => 'r_vl_assay'), 'a.id = rvc.vl_assay', array('assay_name' => 'name'))
+            ->where('rvc.shipment_id = ?', $sId);
 
         if ($sampleId != null) {
             $sql = $sql->where('rvc.sample_id = ?', $sampleId);
@@ -227,7 +241,8 @@ class Application_Service_Schemes {
         return $response;
     }
 
-    public function updateVlInformation($params) {
+    public function updateVlInformation($params)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         foreach ($params['sampleId'] as $assayId => $samples) {
             foreach ($samples as $sampid) {
@@ -238,7 +253,8 @@ class Application_Service_Schemes {
         }
     }
 
-    public function setVlRange($sId) {
+    public function setVlRange($sId)
+    {
 
 
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -248,12 +264,12 @@ class Application_Service_Schemes {
 
         foreach ($vlAssayArray as $vlAssayId => $vlAssayName) {
             $sql = $db->select()->from(array('ref' => 'reference_result_vl'), array('shipment_id', 'sample_id'))
-                    ->join(array('s' => 'shipment'), 's.shipment_id=ref.shipment_id', array())
-                    ->join(array('sp' => 'shipment_participant_map'), 's.shipment_id=sp.shipment_id', array('participant_id'))
-                    ->joinLeft(array('res' => 'response_result_vl'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('reported_viral_load'))
-                    ->where('sp.shipment_id = ? ', $sId)
-                    ->where("sp.is_excluded = 'no' ")
-                    ->where('sp.attributes like ? ', '%"vl_assay":"' . $vlAssayId . '"%');
+                ->join(array('s' => 'shipment'), 's.shipment_id=ref.shipment_id', array())
+                ->join(array('sp' => 'shipment_participant_map'), 's.shipment_id=sp.shipment_id', array('participant_id'))
+                ->joinLeft(array('res' => 'response_result_vl'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('reported_viral_load'))
+                ->where('sp.shipment_id = ? ', $sId)
+                ->where("sp.is_excluded = 'no' ")
+                ->where('sp.attributes like ? ', '%"vl_assay":"' . $vlAssayId . '"%');
             $response = $db->fetchAll($sql);
             $sampleWise = array();
             foreach ($response as $row) {
@@ -267,10 +283,11 @@ class Application_Service_Schemes {
 
                 if ($reportedVl != "" && $reportedVl != null && count($reportedVl) > 7) {
 
-                    $rvcRow = $db->fetchRow($db->select()->from('reference_vl_calculation')
-                                    ->where('shipment_id = ?', $sId)
-                                    ->where('sample_id = ?', $sample)
-                                    ->where('vl_assay = ?', $vlAssayId)
+                    $rvcRow = $db->fetchRow(
+                        $db->select()->from('reference_vl_calculation')
+                            ->where('shipment_id = ?', $sId)
+                            ->where('sample_id = ?', $sample)
+                            ->where('vl_assay = ?', $vlAssayId)
                     );
                     $inputArray = $origArray = $reportedVl;
 
@@ -307,7 +324,8 @@ class Application_Service_Schemes {
                     $finalLow = $avg - (3 * $sd);
                     $finalHigh = $avg + (3 * $sd);
 
-                    $data = array('shipment_id' => $sId,
+                    $data = array(
+                        'shipment_id' => $sId,
                         'vl_assay' => $vlAssayId,
                         'sample_id' => $sample,
                         'q1' => $q1,
@@ -342,7 +360,8 @@ class Application_Service_Schemes {
         }
     }
 
-    public function getQuartile($inputArray, $quartile) {
+    public function getQuartile($inputArray, $quartile)
+    {
         $pos = (count($inputArray) - 1) * $quartile;
 
         $base = floor($pos);
@@ -355,11 +374,13 @@ class Application_Service_Schemes {
         }
     }
 
-    public function getAverage($inputArray) {
+    public function getAverage($inputArray)
+    {
         return array_sum($inputArray) / count($inputArray);
     }
 
-    public function getStdDeviation($inputArray) {
+    public function getStdDeviation($inputArray)
+    {
 
         $avg = $this->getAverage($inputArray);
 
@@ -368,40 +389,46 @@ class Application_Service_Schemes {
             $sum += pow($value - $avg, 2);
         }
 
-        if((count($inputArray) - 1) != 0)
+        if ((count($inputArray) - 1) != 0)
             return sqrt((1 / (count($inputArray) - 1)) * $sum);
         else
             return;
     }
 
-    public function getShipmentData($sId, $pId, $platformID = 1, $assayID = 1) {
+    public function getShipmentData($sId, $pId, $platformID = 1, $assayID = 1)
+    {
 
         $db = new Application_Model_DbTable_Shipments();
         return $db->getShipmentData($sId, $pId, $platformID, $assayID);
     }
 
-    public function getSchemeControls($schemeId) {
+    public function getSchemeControls($schemeId)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         return $db->fetchAll($db->select()->from('r_control')->where("for_scheme='$schemeId'"));
     }
 
-    public function getSchemeEvaluationComments($schemeId) {
+    public function getSchemeEvaluationComments($schemeId)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         return $db->fetchAll($db->select()->from('r_evaluation_comments')->where("scheme='$schemeId'"));
     }
 
-    public function getPossibleResults($schemeId) {
+    public function getPossibleResults($schemeId)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
         return $db->fetchAll($db->select()->from('r_possibleresult')->where("scheme_id='$schemeId'"));
     }
 
-    public function countEnrollmentSchemes() {
+    public function countEnrollmentSchemes()
+    {
         $schemeListDb = new Application_Model_DbTable_Scheme();
         return $schemeListDb->countEnrollmentSchemes();
     }
 
-    public function getScheme($sid) {
+    public function getScheme($sid)
+    {
         if ($sid != null) {
             $schemeListDb = new Application_Model_DbTable_Scheme();
             return $schemeListDb->fetchRow($schemeListDb->select()->where("scheme_id = ?", $sid));
@@ -410,20 +437,22 @@ class Application_Service_Schemes {
         }
     }
 
-    public function getVlManualValue($shipmentId, $sampleId, $vlAssay) {
+    public function getVlManualValue($shipmentId, $sampleId, $vlAssay)
+    {
         if (trim($shipmentId) != "" && trim($sampleId) != "" && trim($vlAssay) != "") {
             $db = Zend_Db_Table_Abstract::getDefaultAdapter();
             $sql = $db->select()->from(array('rvc' => 'reference_vl_calculation'), array('shipment_id', 'sample_id', 'vl_assay', 'manual_q1', 'manual_q3', 'manual_iqr', 'manual_quartile_low', 'manual_quartile_high', 'manual_mean', 'manual_sd', 'manual_cv', 'manual_high_limit', 'manual_low_limit', 'use_range'))
-                    ->join(array('ref' => 'reference_result_vl'), 'rvc.sample_id = ref.sample_id AND ref.shipment_id=' . $shipmentId, array('sample_label'))
-                    ->join(array('a' => 'r_vl_assay'), 'a.id = rvc.vl_assay', array('assay_name' => 'name'))
-                    ->where('rvc.shipment_id = ?', $shipmentId)
-                    ->where('rvc.sample_id = ?', $sampleId)
-                    ->where('rvc.vl_assay = ?', $vlAssay);
+                ->join(array('ref' => 'reference_result_vl'), 'rvc.sample_id = ref.sample_id AND ref.shipment_id=' . $shipmentId, array('sample_label'))
+                ->join(array('a' => 'r_vl_assay'), 'a.id = rvc.vl_assay', array('assay_name' => 'name'))
+                ->where('rvc.shipment_id = ?', $shipmentId)
+                ->where('rvc.sample_id = ?', $sampleId)
+                ->where('rvc.vl_assay = ?', $vlAssay);
             return $db->fetchRow($sql);
         }
     }
 
-    public function updateVlManualValue($params) {
+    public function updateVlManualValue($params)
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $db->beginTransaction();
         try {
@@ -451,26 +480,45 @@ class Application_Service_Schemes {
         }
     }
 
-    public function getVlNotTestedReasons() {
+    public function getVlNotTestedReasons()
+    {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $sql = $db->select()->from(array('response_vl_not_tested_reason'))
-                ->where('status = ? ', 'active');
+            ->where('status = ? ', 'active');
         return $db->fetchAll($sql);
     }
 
-    public function addScheme($params){
+    public function addScheme($params)
+    {
         $schemeModel = new Application_Model_DbTable_Scheme();
         return $schemeModel->addScheme($params);
     }
-       
-    public function deleteScheme($platformId){
+
+    public function deleteScheme($platformId)
+    {
         $schemeModel = new Application_Model_DbTable_Scheme();
         return $schemeModel->deleteScheme($platformId);
     }
-    
-    public function updateScheme($params){
+
+    public function updateScheme($params)
+    {
         $schemeModel = new Application_Model_DbTable_Scheme();
         return $schemeModel->updateScheme($params);
     }
-    
+
+    public function getSamples($mapID)
+    {
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+
+        $sql = $db->select()->from(array('ref' => 'reference_result_vl'))
+            ->join(array('s' => 'shipment'), 's.shipment_id=ref.shipment_id')
+            ->join(array('sp' => 'shipment_participant_map'), 's.shipment_id=sp.shipment_id')
+            ->joinLeft(array('res' => 'response_result_vl'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('reported_viral_load', 'calculated_score', 'is_tnd', 'responseDate' => 'res.created_on'))
+            ->where('ref.control = 0 ')
+            ->where('sp.map_id = ? ', $mapID);
+
+        Pt_Commons_General::log2File($sql);
+
+        return $db->fetchAll($sql);
+    }
 }

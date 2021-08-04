@@ -252,7 +252,7 @@ class ParticipantController extends Zend_Controller_Action {
             $shipmentService->fetchAllReadiness($params);
         }
     }
-
+    //http://eid.com/admin/participants/individual-performance/sid/12/pid/72/eid/19121190/pfid/1/aid/2
     public function individualPerformanceAction(){
 
         $this->_helper->layout()->pageName = 'view-reports';

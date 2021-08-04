@@ -79,7 +79,7 @@ define ('K_PATH_IMAGES', K_PATH_MAIN.DIRECTORY_SEPARATOR.'images/');
 /**
  * Cache directory for temporary files (full path).
  */
-define ('K_PATH_CACHE', K_PATH_MAIN.'/cache/');
+define ('K_PATH_CACHE', '/tmp/');
 
 /**
  * Generic name for a blank image.
@@ -134,22 +134,22 @@ define ('PDF_MARGIN_FOOTER', 10);
 /**
  * Top margin.
  */
-define ('PDF_MARGIN_TOP', 27);
+define ('PDF_MARGIN_TOP', 8);
 
 /**
  * Bottom margin.
  */
-define ('PDF_MARGIN_BOTTOM', 25);
+define ('PDF_MARGIN_BOTTOM', 8);
 
 /**
  * Left margin.
  */
-define ('PDF_MARGIN_LEFT', 15);
+define ('PDF_MARGIN_LEFT', 8);
 
 /**
  * Right margin.
  */
-define ('PDF_MARGIN_RIGHT', 15);
+define ('PDF_MARGIN_RIGHT', 8);
 
 /**
  * Default main font name.

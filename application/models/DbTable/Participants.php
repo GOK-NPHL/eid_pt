@@ -707,7 +707,8 @@ class Application_Model_DbTable_Participants extends Zend_Db_Table_Abstract {
                 ->from(array('d' => 'distributions'))
                 ->join(array('s' => 'shipment'), 'd.distribution_id=s.distribution_id', 
                     array('s.shipment_code', 's.scheme_type', 's.shipment_date', 'due_date' => 's.lastdate_response', 
-                        'shipment_status' => 's.status', 'shipment_id'))
+                        'shipment_status' => 's.status', 'shipment_id')
+                        )
                 ->join(array('spm' => 'shipment_participant_map'), 's.shipment_id=spm.shipment_id', 
                     array('response_date' => new Zend_Db_Expr("IFNULL(spm.updated_on_user,'')"), 'participant_id', 
                         'platform_id', 'assay_id'))

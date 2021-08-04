@@ -1,0 +1,207 @@
+<?php
+
+require_once('tcpdf/tcpdf.php');
+// require_once('tcpdf_include.php');
+// create new PDF document
+
+
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+// remove default header/footer
+$pdf->setPrintHeader(false);
+$pdf->setPrintFooter(false);
+
+// // set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+// // set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, 15, PDF_MARGIN_RIGHT, 10);
+
+// // set auto page breaks
+$pdf->SetAutoPageBreak(FALSE, PDF_MARGIN_BOTTOM);
+
+// // set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+// // set some language-dependent strings (optional)
+if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+	require_once(dirname(__FILE__) . '/lang/eng.php');
+	$pdf->setLanguageArray($l);
+}
+
+// // ---------------------------------------------------------
+
+// // set font
+$pdf->SetFont('times', '', 10);
+
+// // add a page
+$pdf->AddPage();
+
+$html = '<div style="border:2px solid black;">';
+$html .= '<table style="padding:5px;margin:10px;"><tr><td>';
+
+$html .= '<div style="text-align:center;margin:5px;font-size:0.95em;"><b>';
+$html .= '<img src="/images/country/moh-logo.png" width="80px"><br>';
+$html .= 'MINISTRY OF HEALTH<br>';
+$html .= 'NATIONAL PUBLIC HEALTH LABORATORY<br>';
+$html .= 'KENYA EXTERNAL QUALITY ASSESSMENT SCHEME (KNEQAS)<br>';
+$html .= 'HIV MOLECULAR - VL PROFICIENCY TESTING<br></b>';
+$html .= 'P.O Box 20750 - 00202 NAIROBI Email: nphlpt@nphl.go.ke Help Desk: helpdesk.nphl.go.ke<br>';
+$html .= '</div><b>';
+$html .= '<span style="font-size: 1.3em;display: inline-block;">';
+$html .= "{$this->distribution['distribution_name']} - {$this->shipment['scheme_name']} Proficiency Testing Report</span></b>";
+
+$html .= '</td></tr><tr><td>';
+
+$html .= '<table style="width:100%;margin:15px auto;">';
+$html .= '<tr><td colspan="2"><b>Lab Code</b>: ' . $this->participant['MflCode'];
+$html .= '&nbsp; &nbsp; &nbsp; <b>Lab Name</b>: ' . $this->participant['institute_name'] . '</td>';
+$html .= '<td><b>Phone No</b>: ' . $this->participant['phone'] . '</td>';
+$html .= '<td><b>Platform</b>: ' . $this->platform['PlatformName'] . '</td>';
+$html .= '</tr></table>';
+
+$html .= '</td></tr><tr><td>';
+
+$html .= '<table style="width:100%;margin:10px auto;">';
+$html .= '<tr class="dark">';
+$html .= '<td style="width:30%;"><b>Shipment Date</b></td>';
+$html .= '<td style="width:20%;">' . $this->dateFormat($this->shipment['shipment_date']) . '</td>';
+$html .= '<td style="width:30%;"><b>Result Submission Date</b></td>';
+$html .= '<td>' . $this->dateFormat($this->shipment['lastdate_response']) . '</td>';
+$html .= '</tr>';
+
+$html .= '<tr class ="light">';
+$html .= '<td><b>Specimen Receipt Date</b></td>';
+$html .= '<td>' . $this->dateFormat($this->shipment["shipment_receipt_date"]) . '</td>';
+$html .= '<td><b>Testing Date</b></td> ';
+$html .= '<td>' . $this->dateFormat($this->shipment["shipment_test_date"]) . '</td>';
+$html .= '</tr>';
+
+// $html .= '<tr>';
+// $html .= '<td><b>Specimen Volume used for testing</b></td> ';
+// $html .= '<td>'.$this->shipment['attributes']['specimen_volume'].'</td>';
+// $html .= '<td><b>Sample Volume Received</b></td>';
+// $html .= '<td>'.$this->shipment['attributes']['specimen_volume'].'</td>';
+// $html .= '</tr>';
+
+$html .= '<tr class ="dark">';
+$html .= '<td><b>Kit Lot Number</b></td>';
+$html .= '<td>' . (isset($this->shipment['attributes']['assay_lot_number']) ? $this->shipment['attributes']['assay_lot_number'] : '') . '</td>';
+$html .= '<td><b>Kit Expiration Date </b></td>';
+$html .= '<td>' . (isset($this->shipment['attributes']['assay_expiration_date']) ? $this->dateFormat($this->shipment['attributes']['assay_expiration_date']) : '') . '</td>';
+$html .= '</tr></table>';
+
+$html .= '</td></tr><tr><td>';
+
+$html .= '<table style="border: 1px solid #000;">';
+$html .= '<thead style="' . ((isset($this->shipment['is_pt_test_not_performed']) && $this->shipment['is_pt_test_not_performed'] == 'yes') ? 'display:none;' : '') . '">';
+$html .= '<tr>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Sample</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Target</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Interpretation</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Consensus</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Score</b></th>';
+$html .= '</tr>';
+$html .= '</thead>';
+
+$html .= '<tbody>';
+$negativePositiveResult = ['Negative', 'Positive'];
+$count = 0;
+$sampleCount = 0;
+$correctCount = 0;
+foreach ($this->allSamples as $sample) {
+	// $html .='<tr><td>';
+	// <td>herer 1</td>
+	// <td>herer 1</td>
+	// <td>herer 1</td>
+	// </tr>';
+	if ($sample["sample_label"] == "Kit Negative Control" || $sample["sample_label"] == "Kit Positive Control") {
+		continue;
+	}
+
+	$html .= '<tr class="light vlResultSection" style="' . ((isset($this->shipment["is_pt_test_not_performed"]) && $this->shipment["is_pt_test_not_performed"] == "yes") ? "display:none;" : "") . ' ">
+                                        <td >';
+	$html .= $sample["sample_label"] . '</td>';
+	$html .= '<td style="text-align:center;">';
+	$html .= $sample["target"] == 0 ?  "Not Detected" : "";
+	$html .= $sample["target"] == 1 ?  "Detected" : "";
+	$html .= '</td>';
+	$html .= '<td style="text-align:center;">';
+	$html .=
+		$negativePositiveResult[intVal($sample["interpretation"])];
+
+	$html .= '</td>';
+	$html .= '<td>';
+	if ($sample['control'] == 0) {
+		$html .= $negativePositiveResult[round($this->averagePerformance[$sample['sample_id']])];
+		$sampleCount++;
+	}
+	$html .= '</td>';
+
+	$html .= $sample["control"] == 0 && $negativePositiveResult[round($this->averagePerformance[$sample["sample_id"]])] == $negativePositiveResult[intVal($sample["interpretation"])] ?
+		"ACCEPTABLE" : "UNACCEPTABLE";
+
+	$sample["control"] == 0 && $negativePositiveResult[round($this->averagePerformance[$sample["sample_id"]])] == $negativePositiveResult[intVal($sample["interpretation"])] ?
+		$correctCount++ : "";
+
+	$html .= '</tr>';
+}
+$html .= '</tbody>';
+
+if (isset($this->shipment['is_pt_test_not_performed']) && $this->shipment['is_pt_test_not_performed'] == 'yes') {
+	$html .= '<tr><td colspan="6">';
+	$html .= '<b>Reason for not testing</b> : ';
+	$html .= $this->shipment['vl_not_tested_reason'];
+	$html .= '</td></tr>';
+	$html .= '<tr><td colspan="6"><b>Your comments</b> : ';
+	$html .= $this->shipment['pt_test_not_performed_comments'] . '</td></tr>';
+	$html .= '<tr><td colspan="6"><b>Do you need any support from the PT Provider ?</b> ';
+	$html .= $this->shipment['pt_support_comments'] . '</td></tr>';
+}
+$html .= '</tbody></table>';
+
+// Do not display participant aggregate score
+$htmlx = '</td></tr><tr><td align="right">';
+
+$htmlx .= '<b style="font-size: 1.2em;">';
+$htmlx .= round($this->shipment["shipment_score"]) . "% &nbsp;";
+if ($this->shipment["final_result"] == 1) {
+	$htmlx .= 'Satisfactory';
+} else {
+	$htmlx .= '<span style="color:red;">Unsatisfactory</span>';
+}
+
+$htmlx .= '</b>';
+$html .= '</td></tr>';
+
+
+$html .= '<tr><td>';
+
+if (isset($this->distribution['finalized_at']) && strlen($this->distribution['finalized_at']) > 10) {
+	$html .= '<table><tr>';
+	$html .= '<td colspan="5">&nbsp;</td>';
+	$html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="/images/approver.png" /></td></tr>';
+
+	$html .= '<tr><td align="right">Approved By &nbsp;</td>';
+	$html .= '<td style="border-bottom:1px solid #000;" align="center">Thomas Gachuki</td>';
+	$html .= '<td align="right">Date &nbsp;</td>';
+	$html .= '<td align="center" style="border-bottom:1px solid #000;">' . $this->dateFormat(substr($this->distribution['finalized_at'], 0, 10)) . '</td>';
+	$html .= '<td align="right">Sign &nbsp;</td></tr>';
+	$html .= '<tr><td>&nbsp;</td><td align="center">For Head NPHL</td></tr></table>';
+}
+
+$html .= '</td></tr><tr><td> &nbsp;';
+$html .= '</td></tr><tr><td>';
+$html .= '<table><tr>';
+$html .= '<td>MOH/F/NPHL/KNEQAS/HIV/VL/02</td>';
+$html .= '<td align="center">Page 1 of 1</td>';
+$html .= '<td></td></tr></table>';
+
+$html .= '</td></tr></table></div>';
+
+$pdf->writeHTML($html, true, false, true, false, '');
+$fileName = $this->mid . "-" . $this->shipmentID . "-" . $this->participantId . ".pdf";
+// $fileName="test.pdf";
+$pdf->Output($fileName, 'I');
+
+exit;
