@@ -171,7 +171,9 @@ $html .= '</thead>';
 $html .= "<tbody>";
 
 $html .= "<tr><td></td></tr>";
-$html .= '<tr><td><div> <strong>Expert comment:</strong> Thank you for participating in inter-lab Cycle 2 – 2020 PT. Your overall score was ';
+$html .= '<tr><td><div> <strong>Expert comment:</strong> Thank you for participating in';
+$html .= $this->distribution['distribution_name'] .'-'. $this->shipment['scheme_name'];
+$html .= 'Your overall score was ';
 
 $html .= ($correctCount / $sampleCount * 100 >= $this->shipment["pass_mark"]) ?
 	'<strong>Satisfactory</strong> (' . $correctCount / $sampleCount * 100 . '%)'
