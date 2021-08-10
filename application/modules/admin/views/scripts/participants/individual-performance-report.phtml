@@ -146,7 +146,7 @@ foreach ($this->allSamples as $sample) {
 
 	$html .= '</tr>';
 }
-$html .= '</tbody>';
+// $html .= '</tbody>';
 
 if (isset($this->shipment['is_pt_test_not_performed']) && $this->shipment['is_pt_test_not_performed'] == 'yes') {
 	$html .= '<tr><td colspan="6">';
@@ -159,46 +159,124 @@ if (isset($this->shipment['is_pt_test_not_performed']) && $this->shipment['is_pt
 	$html .= $this->shipment['pt_support_comments'] . '</td></tr>';
 }
 
-$html .= '<div> <strong>Expert comment:</strong> Thank you for participating in inter-lab Cycle 2 – 2020 PT. Your overall score was ';
+
+$html .= '</tbody></table>';
+
+$html .= "<table>";
+
+$html .= '<thead>';
+// $html .= '<th></th>';
+$html .= '</thead>';
+
+$html .= "<tbody>";
+
+$html .= "<tr><td></td></tr>";
+$html .= '<tr><td><div> <strong>Expert comment:</strong> Thank you for participating in inter-lab Cycle 2 – 2020 PT. Your overall score was ';
 
 $html .= ($correctCount / $sampleCount * 100 >= $this->shipment["pass_mark"]) ?
 	'<strong>Satisfactory</strong> (' . $correctCount / $sampleCount * 100 . '%)'
 	:
 	'<span style="color:red;">Unsatisfactory</span> (' . $correctCount / $sampleCount * 100 . '%)';
 
-$html .= '</div>';
+$html .= '</div></td></tr>';
 
-$html .= '</tbody></table>';
+$html .= "</tbody>";
+
+$html .= "</table>";
+
+$html .= "<br/><br/>";
+
+// start section
+$html .= '<table  style="border: 1px solid #000;">';
+$html .= "<thead>";
+$html .= '</thead>';
+$html .= "<tbody>";
+$html .= "<tr><td><strong>Testing scheme information:</strong></td></tr>";
+$html .= "</tbody>";
+$html .= "</table>";
+// end start section
+
+$html .= "<br/><br/>";
+
+// start section
+$html .= '<table  style="border: 1px solid #000;">';
+$html .= "<thead>";
+$html .= '</thead>';
+$html .= "<tbody>";
+$html .= "
+<tr><td>1. Molecular EID PT is a qualitative scheme.</td></tr>
+<tr><td>2. The panel samples come as dry blood spots.</td></tr>
+<tr><td>3. The PT samples have been fully characterised for the assigned qual HIV status.</td></tr>
+<tr><td>4. The reference values are used to grade the participants.</td></tr>
+<tr><td>5. The panel samples have been tested for stability and are stable.</td></tr>
+<tr><td>6. Homogeneity was done using systematic random sampling and the results were the same as
+the expected results.</td></tr>
+<tr><td>7. Participants performance report is confidential and will only be shared with the responsible
+quality assuarance officers for the participating laboratories and for any purpose of
+corrective interventions.</td></tr>
+<tr><td>8. Subcontracted services: PT panel distribution and return of results.</td></tr>
+<tr><td>9. The schemes final report with summaries of overall performance analysis are indicated
+below</td></tr>";
+$html .= "</tbody>";
+$html .= "</table>";
+// end start section
+
+
+$html .= "<br/><br/>";
+
+// start section
+$html .= '<table>';
+$html .= "<thead>";
+$html .= '</thead>';
+$html .= "<tbody>";
+$html .= "<tr><td><strong>PT Scheme Summary Performance</strong></td></tr>";
+$html .= "</tbody>";
+$html .= "</table>";
+// end start section
+
+$html .= "<br/><br/>";
+
+// start section
+$html .= '<table style="border: 1px solid #000;">';
+$html .= '<thead>';
+$html .= '<tr>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Enrolment</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Participation</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Satisfactory</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Unsatisfactory</b></th>';
+$html .= '</tr>';
+$html .= '</thead>';
+
+$html .= "<tbody>";
+$html .= '<tr>
+<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
+<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
+<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
+<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
+</tr>';
+
+$html .= "</tbody>";
+$html .= "</table>";
+// end start section
 
 // Do not display participant aggregate score
 $htmlx = '</td></tr><tr><td align="right">';
-
-$htmlx .= '<b style="font-size: 1.2em;">';
-$htmlx .= round($this->shipment["shipment_score"]) . "% &nbsp;";
-if ($this->shipment["final_result"] == 1) {
-	$htmlx .= 'Satisfactory';
-} else {
-	$htmlx .= '<span style="color:red;">Unsatisfactory</span>';
-}
-
 $htmlx .= '</b>';
 $html .= '</td></tr>';
-
-
 $html .= '<tr><td>';
 
-if (isset($this->distribution['finalized_at']) && strlen($this->distribution['finalized_at']) > 10) {
-	$html .= '<table><tr>';
-	$html .= '<td colspan="5">&nbsp;</td>';
-	$html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="/images/approver.png" /></td></tr>';
+// if (isset($this->distribution['finalized_at']) && strlen($this->distribution['finalized_at']) > 10) {
+$html .= '<table><tr>';
+$html .= '<td colspan="5">&nbsp;</td>';
+$html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="/images/approver.png" /></td></tr>';
 
-	$html .= '<tr><td align="right">Approved By &nbsp;</td>';
-	$html .= '<td style="border-bottom:1px solid #000;" align="center">Thomas Gachuki</td>';
-	$html .= '<td align="right">Date &nbsp;</td>';
-	$html .= '<td align="center" style="border-bottom:1px solid #000;">' . $this->dateFormat(substr($this->distribution['finalized_at'], 0, 10)) . '</td>';
-	$html .= '<td align="right">Sign &nbsp;</td></tr>';
-	$html .= '<tr><td>&nbsp;</td><td align="center">For Head NPHL</td></tr></table>';
-}
+$html .= '<tr><td align="right">Approved By &nbsp;</td>';
+$html .= '<td style="border-bottom:1px solid #000;" align="center">Thomas Gachuki</td>';
+$html .= '<td align="right">Date &nbsp;</td>';
+$html .= '<td align="center" style="border-bottom:1px solid #000;">' . $this->dateFormat(substr($this->distribution['finalized_at'], 0, 10)) . '</td>';
+$html .= '<td align="right">Sign &nbsp;</td></tr>';
+$html .= '<tr><td>&nbsp;</td><td align="center">For Head NPHL</td></tr></table>';
+// }
 
 $html .= '</td></tr><tr><td> &nbsp;';
 $html .= '</td></tr><tr><td>';
