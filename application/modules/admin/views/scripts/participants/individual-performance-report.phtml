@@ -97,9 +97,9 @@ $html .= '<table style="border: 1px solid #000;">';
 $html .= '<thead style="' . ((isset($this->shipment['is_pt_test_not_performed']) && $this->shipment['is_pt_test_not_performed'] == 'yes') ? 'display:none;' : '') . '">';
 $html .= '<tr>';
 $html .= '<th style="border:1px solid #000;text-align:center;"><b>Sample</b></th>';
-$html .= '<th style="border:1px solid #000;text-align:center;"><b>Target</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Results</b></th>';
 $html .= '<th style="border:1px solid #000;text-align:center;"><b>Interpretation</b></th>';
-$html .= '<th style="border:1px solid #000;text-align:center;"><b>Consensus</b></th>';
+$html .= '<th style="border:1px solid #000;text-align:center;"><b>Expected Results</b></th>';
 $html .= '<th style="border:1px solid #000;text-align:center;"><b>Score</b></th>';
 $html .= '</tr>';
 $html .= '</thead>';
@@ -158,6 +158,16 @@ if (isset($this->shipment['is_pt_test_not_performed']) && $this->shipment['is_pt
 	$html .= '<tr><td colspan="6"><b>Do you need any support from the PT Provider ?</b> ';
 	$html .= $this->shipment['pt_support_comments'] . '</td></tr>';
 }
+
+$html .= '<div> <strong>Expert comment:</strong> Thank you for participating in inter-lab Cycle 2 – 2020 PT. Your overall score was ';
+
+$html .= ($correctCount / $sampleCount * 100 >= $this->shipment["pass_mark"]) ?
+	'<strong>Satisfactory</strong> (' . $correctCount / $sampleCount * 100 . '%)'
+	:
+	'<span style="color:red;">Unsatisfactory</span> (' . $correctCount / $sampleCount * 100 . '%)';
+
+$html .= '</div>';
+
 $html .= '</tbody></table>';
 
 // Do not display participant aggregate score
@@ -193,7 +203,7 @@ if (isset($this->distribution['finalized_at']) && strlen($this->distribution['fi
 $html .= '</td></tr><tr><td> &nbsp;';
 $html .= '</td></tr><tr><td>';
 $html .= '<table><tr>';
-$html .= '<td>MOH/F/NPHL/KNEQAS/HIV/VL/02</td>';
+$html .= '<td>MOH/F/NPHL/KNEQAS/HIV/EID/02</td>';
 $html .= '<td align="center">Page 1 of 1</td>';
 $html .= '<td></td></tr></table>';
 
