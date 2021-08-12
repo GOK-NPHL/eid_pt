@@ -120,27 +120,27 @@ foreach ($this->allSamples as $sample) {
 	}
 
 	$html .= '<tr class="light vlResultSection" style="' . ((isset($this->shipment["is_pt_test_not_performed"]) && $this->shipment["is_pt_test_not_performed"] == "yes") ? "display:none;" : "") . ' ">
-                                        <td >';
+                                        <td style="border:1px solid #000;">';
 	$html .= $sample["sample_label"] . '</td>';
-	$html .= '<td style="text-align:center;">';
+	$html .= '<td style=" border:1px solid #000;text-align:center;">';
 	$html .= $sample["target"] == 0 ?  "Not Detected" : "";
 	$html .= $sample["target"] == 1 ?  "Detected" : "";
 	$html .= '</td>';
-	$html .= '<td style="text-align:center;">';
+	$html .= '<td  style="border:1px solid #000;text-align:center;">';
 	$html .=
 		$negativePositiveResult[intVal($sample["interpretation"])];
 
 	$html .= '</td>';
-	$html .= '<td>';
+	$html .= '<td style="border:1px solid #000;">';
 	if ($sample['control'] == 0) {
 		$html .= $negativePositiveResult[round($this->averagePerformance[$sample['sample_id']])];
 		$sampleCount++;
 	}
 	$html .= '</td>';
-
+	$html .= '<td style="border:1px solid #000;">';
 	$html .= $sample["control"] == 0 && $negativePositiveResult[round($this->averagePerformance[$sample["sample_id"]])] == $negativePositiveResult[intVal($sample["interpretation"])] ?
 		"ACCEPTABLE" : "UNACCEPTABLE";
-
+	$html .= '</td>';
 	$sample["control"] == 0 && $negativePositiveResult[round($this->averagePerformance[$sample["sample_id"]])] == $negativePositiveResult[intVal($sample["interpretation"])] ?
 		$correctCount++ : "";
 
@@ -270,10 +270,13 @@ $html .= '<tr><td>';
 // if (isset($this->distribution['finalized_at']) && strlen($this->distribution['finalized_at']) > 10) {
 $html .= '<table><tr>';
 $html .= '<td colspan="5">&nbsp;</td>';
-$html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="/images/approver.png" /></td></tr>';
+// $html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="/images/approver.png" /></td></tr>';
+$html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="" /></td></tr>';
 
 $html .= '<tr><td align="right">Approved By &nbsp;</td>';
-$html .= '<td style="border-bottom:1px solid #000;" align="center">Thomas Gachuki</td>';
+$html .= '<td style="border-bottom:1px solid #000;" align="center">';
+// Thomas Gachuki
+$html .='</td>';
 $html .= '<td align="right">Date &nbsp;</td>';
 $html .= '<td align="center" style="border-bottom:1px solid #000;">' . $this->dateFormat(substr($this->distribution['finalized_at'], 0, 10)) . '</td>';
 $html .= '<td align="right">Sign &nbsp;</td></tr>';
@@ -285,7 +288,7 @@ $html .= '</td></tr><tr><td>';
 $html .= '<table><tr>';
 $html .= '<td>MOH/F/NPHL/KNEQAS/HIV/EID/02</td>';
 $html .= '<td align="center">Page 1 of 1</td>';
-$html .= '<td></td></tr></table>';
+$html .= '<td><img style="height:35px;" src="/images/ukas.png" /></td></tr></table>';
 
 $html .= '</td></tr></table></div>';
 
