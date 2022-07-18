@@ -894,7 +894,7 @@ class Application_Model_DbTable_Participants extends Zend_Db_Table_Abstract {
 
 
         $sQuery = $this->getAdapter()->select()->from(array('p' => 'participant'))
-                ->join(array('sp' => 'shipment_participant_map'), 'sp.participant_id=p.participant_id', array('sp.map_id', 'sp.created_on_user', 'sp.attributes', 'sp.final_result', 'sp.shipment_test_date', "RESPONSE" => new Zend_Db_Expr("CASE WHEN (sp.is_excluded ='yes') THEN 'Excluded'  WHEN (sp.shipment_test_date!='' AND sp.shipment_test_date!='0000-00-00' AND sp.shipment_test_date!='NULL') THEN 'Responded' ELSE 'Not Responded' END")))
+                ->join(array('sp' => 'shipment_participant_map'), 'sp.participant_id=p.participant_id', array('sp.map_id', 'sp.created_on_user', 'sp.attributes', 'sp.final_result', 'sp.shipment_test_date', "RESPONSE" => new Zend_Db_Expr("CASE WHEN (sp.is_excluded ='yes') THEN 'Excluded'  WHEN (sp.shipment_test_date!='' AND sp.shipment_test_date!=null AND sp.shipment_test_date!='NULL') THEN 'Responded' ELSE 'Not Responded' END")))
                 ->join(array('s' => 'shipment'), 'sp.shipment_id=s.shipment_id', array('shipmentStatus' => 's.status'))
                 ->joinLeft(array('c' => 'countries'), 'c.id=p.country', array('c.iso_name'))
                 ->where("p.status='active'");
@@ -1224,10 +1224,10 @@ class Application_Model_DbTable_Participants extends Zend_Db_Table_Abstract {
          * Get data to display
          */
 
-        $sQuery = $this->getAdapter()->select()->from(array('sp' => 'shipment_participant_map'), array('sp.participant_id', 'sp.shipment_test_date', "RESPONSE" => new Zend_Db_Expr("CASE WHEN (sp.is_excluded ='yes') THEN 'Excluded'  WHEN (sp.shipment_test_date!='' AND sp.shipment_test_date!='0000-00-00' AND sp.shipment_test_date!='NULL') THEN 'Responded' ELSE 'Not Responded' END")))
+        $sQuery = $this->getAdapter()->select()->from(array('sp' => 'shipment_participant_map'), array('sp.participant_id', 'sp.shipment_test_date', "RESPONSE" => new Zend_Db_Expr("CASE WHEN (sp.is_excluded ='yes') THEN 'Excluded'  WHEN (sp.shipment_test_date!='' AND sp.shipment_test_date!=null AND sp.shipment_test_date!='NULL') THEN 'Responded' ELSE 'Not Responded' END")))
                 ->joinLeft(array('p' => 'participant'), 'p.participant_id=sp.participant_id', array('p.participant_id', 'p.unique_identifier', 'p.country', 'p.mobile', 'p.phone', 'p.affiliation', 'p.email', 'p.status', 'participantName' => new Zend_Db_Expr("GROUP_CONCAT(DISTINCT p.first_name,\" \",p.last_name ORDER BY p.first_name SEPARATOR ', ')")))
                 ->joinLeft(array('c' => 'countries'), 'c.id=p.country')
-                ->where("sp.shipment_test_date <>'0000-00-00'")
+                ->where("sp.shipment_test_date <>null")
                 ->where("sp.shipment_test_date IS NOT NULL ")
                 ->where("sp.shipment_id = ?", $parameters['shipmentId'])
                 ->group("sp.participant_id");
@@ -1261,7 +1261,7 @@ class Application_Model_DbTable_Participants extends Zend_Db_Table_Abstract {
         $sQuery = $this->getAdapter()->select()->from(array('sp' => 'shipment_participant_map'), array())
                 ->joinLeft(array('p' => 'participant'), 'p.participant_id=sp.participant_id', array())
                 ->joinLeft(array('c' => 'countries'), 'c.id=p.country')
-                ->where("sp.shipment_test_date <>'0000-00-00'")
+                ->where("sp.shipment_test_date <>null")
                 ->where("sp.shipment_test_date IS NOT NULL ")
                 ->where("sp.shipment_id = ?", $parameters['shipmentId'])
                 ->group("sp.participant_id");
@@ -1379,10 +1379,10 @@ class Application_Model_DbTable_Participants extends Zend_Db_Table_Abstract {
          * SQL queries
          * Get data to display
          */
-        $sQuery = $this->getAdapter()->select()->from(array('sp' => 'shipment_participant_map'), array('sp.participant_id', 'sp.map_id', 'sp.shipment_test_date', 'shipment_id', "RESPONSE" => new Zend_Db_Expr("CASE WHEN (sp.is_excluded ='yes') THEN 'Excluded'  WHEN (sp.shipment_test_date!='' AND sp.shipment_test_date!='0000-00-00' AND sp.shipment_test_date!='NULL') THEN 'Responded' ELSE 'Not Responded' END")))
+        $sQuery = $this->getAdapter()->select()->from(array('sp' => 'shipment_participant_map'), array('sp.participant_id', 'sp.map_id', 'sp.shipment_test_date', 'shipment_id', "RESPONSE" => new Zend_Db_Expr("CASE WHEN (sp.is_excluded ='yes') THEN 'Excluded'  WHEN (sp.shipment_test_date!='' AND sp.shipment_test_date!=null AND sp.shipment_test_date!='NULL') THEN 'Responded' ELSE 'Not Responded' END")))
                 ->joinLeft(array('p' => 'participant'), 'p.participant_id=sp.participant_id', array('p.participant_id', 'p.unique_identifier', 'p.country', 'p.mobile', 'p.phone', 'p.affiliation', 'p.email', 'p.status', 'participantName' => new Zend_Db_Expr("GROUP_CONCAT(DISTINCT p.first_name,\" \",p.last_name ORDER BY p.first_name SEPARATOR ', ')")))
                 ->joinLeft(array('c' => 'countries'), 'c.id=p.country')
-                ->where("(sp.shipment_test_date = '0000-00-00' OR sp.shipment_test_date IS NULL)")
+                ->where("(sp.shipment_test_date = null OR sp.shipment_test_date IS NULL)")
                 ->where("sp.shipment_id = ?", $parameters['shipmentId'])
                 ->group("sp.participant_id");
 
@@ -1411,7 +1411,7 @@ class Application_Model_DbTable_Participants extends Zend_Db_Table_Abstract {
         $sQuery = $this->getAdapter()->select()->from(array('sp' => 'shipment_participant_map'), array())
                 ->joinLeft(array('p' => 'participant'), 'p.participant_id=sp.participant_id', array())
                 ->joinLeft(array('c' => 'countries'), 'c.id=p.country')
-                ->where("(sp.shipment_test_date = '0000-00-00' OR sp.shipment_test_date IS NULL)")
+                ->where("(sp.shipment_test_date = null OR sp.shipment_test_date IS NULL)")
                 ->where("sp.shipment_id = ?", $parameters['shipmentId'])
                 ->group("sp.participant_id");
 

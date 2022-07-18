@@ -2019,7 +2019,7 @@ INSERT INTO `report_config` (`name`, `value`) VALUES ('logo-right', NULL);
 ALTER TABLE  `shipment_participant_map` CHANGE  `final_result`  `final_result` INT( 11 ) NULL DEFAULT  '0';
 
 --Guna 21 Apirl 2015
-ALTER TABLE  `shipment_participant_map` CHANGE  `shipment_test_date`  `shipment_test_date` DATE NULL DEFAULT  '0000-00-00';
+ALTER TABLE  `shipment_participant_map` CHANGE  `shipment_test_date`  `shipment_test_date` DATE NULL DEFAULT  null;
 
 --Amit 22 April 2015
 INSERT INTO `r_results` (`result_id`, `result_name`) VALUES ('3', 'Excluded');

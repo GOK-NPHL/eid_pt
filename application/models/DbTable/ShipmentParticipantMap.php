@@ -183,11 +183,11 @@ error_log(json_encode($params));
         $params['evaluation_status'][3] = 0;
 
 	try{
-	  $params['shipment_receipt_date'] = '0000-00-00';
-	  $params['shipment_test_date'] = '0000-00-00';
-	  $params['shipment_test_report_date'] = '0000-00-00';
-	  $params['qc_date'] = '0000-00-00';
-	  $params['qc_created_on'] = '0000-00-00';
+	  $params['shipment_receipt_date'] = null;
+	  $params['shipment_test_date'] = null;
+	  $params['shipment_test_report_date'] = null;
+	  $params['qc_date'] = null;
+	  $params['qc_created_on'] = null;
 	  $params['mode_id'] = null;
 	 $params['final_result'] = 0;
 

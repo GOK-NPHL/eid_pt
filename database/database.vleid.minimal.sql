@@ -549,7 +549,7 @@ CREATE TABLE `shipment_participant_map` (
   `evaluation_status` varchar(10) DEFAULT NULL COMMENT 'Shipment Status					\nUse this to flag - 					\nABCDEFG					',
   `shipment_score` decimal(5,2) DEFAULT NULL,
   `documentation_score` decimal(5,2) DEFAULT '0.00',
-  `shipment_test_date` date DEFAULT '0000-00-00',
+  `shipment_test_date` date DEFAULT null,
   `is_pt_test_not_performed` varchar(45) DEFAULT NULL,
   `vl_not_tested_reason` int(11) DEFAULT NULL,
   `pt_test_not_performed_comments` text,
