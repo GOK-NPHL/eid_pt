@@ -186,6 +186,7 @@
         $("#schemeId").val(scheme)
         $("#configShipment").hide();
         if (scheme != "" && scheme != null) {
+            // $("#btnSpan").fadeIn(); /// workaround. Seems to be working without this bypass now.
             <?php
             if (isset($this->unshippedDistro) && count($this->unshippedDistro) > 0 && $this->unshippedDistro != '') {
             ?>

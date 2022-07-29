@@ -162,3 +162,13 @@ a .home-menu {
     }
 }
 
+.modal-scrollable{
+    position: absolute;
+}
+
+@media screen and (min-width: 768px) {
+    .modal-dialog {
+      right: auto;
+      left: auto;
+    }
+}
