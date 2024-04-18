@@ -248,30 +248,31 @@
                                     </td>
                                     <td>
                                     <?php
-                                    if(isset($sample['reference_result'])) {
-                                        echo $negativePositiveResult[$sample['reference_result']];
-                                    }else{
                                         echo $negativePositiveResult[round($this->averagePerformance[$sample['sample_id']])];
-                                    }
+                                        // if(isset($sample['reference_result'])) {
+                                            // echo $negativePositiveResult[$sample['reference_result']];
+                                        // }else{
+                                            // echo $negativePositiveResult[round($this->averagePerformance[$sample['sample_id']])];
+                                        // }
                                     ?>
                                     </td>
                                     <td>
                                         <?php
-                                        if(isset($sample['reference_result'])){
-                                            if($sample['reference_result'] == $sample['target']){
-                                                echo "ACCEPTABLE";
-                                                $correctCount++;
-                                            }else{
-                                                echo "UNACCEPTABLE";
-                                            }
-                                        }else{
+                                        // if(isset($sample['reference_result'])){
+                                        //     if($sample['reference_result'] == $sample['target']){
+                                        //         echo "ACCEPTABLE";
+                                        //         $correctCount++;
+                                        //     }else{
+                                        //         echo "UNACCEPTABLE";
+                                        //     }
+                                        // }else{
                                             if(round($this->averagePerformance[$sample['sample_id']]) == $sample['target']){
                                                 echo "ACCEPTABLE";
                                                 $correctCount++;
                                             }else{
                                                 echo "UNACCEPTABLE";
                                             }
-                                        }
+                                        // }
                                         ?>
                                     </td>
                                 </tr>
