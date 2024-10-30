@@ -85,6 +85,12 @@ class Application_Service_Schemes
     public function getEidSamples($shipmentID, $participantID, $platformID = 1, $assayID = 2)
     {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+
+        $platformIds = [];
+        $platformCategory = $db->fetchRow( $db->select()->from(array('p' => 'platforms'))->columns(array('Category'))->where('p.id = ?', $platformID) );
+        $platformIds = $db->fetchAll( $db->select()->from(array('p' => 'platforms'))->columns(array('id'))->where('p.Category = ?', $platformCategory['Category']) );
+        $platformIds = array_column($platformIds, 'id');
+
         $sql = $db->select()->from(array('ref' => 'reference_result_eid'))
             ->join(array('s' => 'shipment'), 's.shipment_id=ref.shipment_id')
             ->join(array('sp' => 'shipment_participant_map'), 's.shipment_id=sp.shipment_id')
@@ -92,7 +98,8 @@ class Application_Service_Schemes
             ->where('sp.shipment_id = ? ', $shipmentID)
             ->where('sp.participant_id = ? ', $participantID)
             ->where('sp.assay_id = ?', $assayID)
-            ->where('sp.platform_id = ? ', $platformID);
+            // ->where('sp.platform_id = ? ', $platformID);
+            ->where('sp.platform_id in ? ', $platformIds);
         return $db->fetchAll($sql);
     }
 
@@ -126,20 +133,29 @@ class Application_Service_Schemes
     public function getAllVlPlatformResponses($shipmentID, $platformID = 1, $assayID = 1)
     {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+        
+        $platformIds = [];
+        $platformCategory = $db->fetchRow( $db->select()->from(array('p' => 'platforms'))->columns(array('Category'))->where('p.id = ?', $platformID) );
+        $platformIds = $db->fetchAll( $db->select()->from(array('p' => 'platforms'))->columns(array('id'))->where('p.Category = ?', $platformCategory['Category']) );
+        $platformIds = array_column($platformIds, 'id');
+        
         if ($assayID == 2) { //2 == EID
+
             $sql = $db->select()->from(array('ref' => 'reference_result_eid'), array('sample_id'))
                 ->join(array('sp' => 'shipment_participant_map'), 'ref.shipment_id=sp.shipment_id', array('participant_id'))
                 ->join(array('res' => 'response_result_eid'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('interpretation', 'target'))
                 ->where('sp.shipment_id = ? ', $shipmentID)
                 ->where('sp.assay_id = ?', $assayID)
-                ->where('sp.platform_id = ? ', $platformID);
+                // ->where('sp.platform_id = ? ', $platformID);
+                ->where('sp.platform_id in (?)', $platformIds);
         } else { // 1 == VL
             $sql = $db->select()->from(array('ref' => 'reference_result_vl'), array('sample_id'))
                 ->join(array('sp' => 'shipment_participant_map'), 'ref.shipment_id=sp.shipment_id', array('participant_id'))
                 ->join(array('res' => 'response_result_vl'), 'res.shipment_map_id = sp.map_id and res.sample_id = ref.sample_id', array('reported_viral_load', 'is_tnd'))
                 ->where('sp.shipment_id = ? ', $shipmentID)
                 ->where('sp.assay_id = ?', $assayID)
-                ->where('sp.platform_id = ? ', $platformID);
+                // ->where('sp.platform_id = ? ', $platformID);
+                ->where('sp.platform_id in (?)', $platformIds);
         }
         return $db->fetchAll($sql);
     }
