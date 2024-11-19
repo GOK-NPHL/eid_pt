@@ -285,21 +285,56 @@ $htmlx .= '</b>';
 $html .= '</td></tr>';
 $html .= '<tr><td>';
 
-// if (isset($this->distribution['finalized_at']) && strlen($this->distribution['finalized_at']) > 10) {
-$html .= '<table><tr>';
-$html .= '<td colspan="5">&nbsp;</td>';
-// $html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="/images/approver.png" /></td></tr>';
-$html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="" /></td></tr>';
+////////////////////
 
-$html .= '<tr><td align="right">Approved By &nbsp;</td>';
-$html .= '<td style="border-bottom:1px solid #000;" align="center">';
-// Thomas Gachuki
-$html .='</td>';
-$html .= '<td align="right">Date &nbsp;</td>';
-$html .= '<td align="center" style="border-bottom:1px solid #000;">' . $this->dateFormat(substr($this->distribution['finalized_at'], 0, 10)) . '</td>';
-$html .= '<td align="right">Sign &nbsp;</td></tr>';
-$html .= '<tr><td>&nbsp;</td><td align="center">For Head NPHL</td></tr></table>';
-// }
+$html2 .= '<tr>';
+$html2 .= '<td colspan="2" style="text-align:center;">';
+$html2 .= '<b>Co-ordinator Contacts</b>';
+$html2 .= '</td>';
+$html2 .= '</tr>';
+
+$html2 .= '<tr>';
+$html2 .= '<td>';
+$html2 .= '<b>Name:</b> Joseph Ombayo<br/>';
+$html2 .= '<b>Tel:</b> 0721547885<br/>';
+$html2 .= '</td>';
+$html2 .= '<td>';
+$html2 .= '<b>Name:</b> Naomi Gatambu<br/>';
+$html2 .= '<b>Tel:</b> 0728226292<br/>';
+$html2 .= '</td>';
+$html2 .= '</tr>';
+$html2 .= '<tr>';
+$html2 .= '<td colspan="2" style="text-align:left;">';
+$html2 .= '<b>Report Approved by:</b>';
+$html2 .= '</td>';
+$html2 .= '</tr>';
+$html2 .= '<tr>';
+$html2 .= '<td colspan="2">';
+$html2 .= '<ul style="list-style-type: none;">';
+$html2 .= '<li>Charity Maina</li>';
+$html2 .= '<li>QA Manager, DLS || KNEQAS PT Coordinator</li>';
+$html2 .= '<li>Department of National Laboratory Services</li>';
+$html2 .= '</ul>';
+$html2 .= '</td>';
+$html2 .= '</tr>';
+
+////////////////////
+
+// // if (isset($this->distribution['finalized_at']) && strlen($this->distribution['finalized_at']) > 10) {
+// $html .= '<table><tr>';
+// $html .= '<td colspan="5">&nbsp;</td>';
+// // $html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="/images/approver.png" /></td></tr>';
+// $html .= '<td style="border-bottom:1px solid #000;" rowspan="2" align="center"><img style="height:35px;" src="" /></td></tr>';
+
+// $html .= '<tr><td align="right">Approved By &nbsp;</td>';
+// $html .= '<td style="border-bottom:1px solid #000;" align="center">';
+// // Thomas Gachuki
+// $html .='</td>';
+// $html .= '<td align="right">Date &nbsp;</td>';
+// $html .= '<td align="center" style="border-bottom:1px solid #000;">' . $this->dateFormat(substr($this->distribution['finalized_at'], 0, 10)) . '</td>';
+// $html .= '<td align="right">Sign &nbsp;</td></tr>';
+// $html .= '<tr><td>&nbsp;</td><td align="center">For Head NPHL</td></tr></table>';
+// // }
 
 $html .= '</td></tr><tr><td> &nbsp;';
 $html .= '</td></tr><tr><td>';
