@@ -302,19 +302,42 @@
                     <div class="table-responsive">
                         <table class="table">
                             <tr>
+                                <td colspan="1" style="text-align:left;">
+                                    <b>Co-ordinator Contacts</b>
+                                </td>
+                                <td>
+                                    <b>Name:</b> Joseph Ombayo<br />
+                                    <b>Tel:</b> 0721547885<br />
+                                </td>
+                                <td>
+                                    <b>Name:</b> Naomi Gatambu<br />
+                                    <b>Tel:</b> 0728226292<br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1"><b>Date authorized and released</b></td>
+                                <td style="border-bottom: 1px solid #000 ;vertical-align: bottom;">
+                                    <?php echo $this->dateFormat($this->shipment['lastdate_response']); ?>
+                                </td>
+                            </tr>
+                            <!-- <tr>
                                 <td colspan="5">&nbsp;</td>
                                 <td style="border-bottom: 1px solid #000;width: 15%;vertical-align: bottom;" rowspan="2">
                                     <img style="height:35px;" src="/images/approver.png" />
                                 </td>
-                            </tr>
+                            </tr> -->
                             <tr>
-                                <td style="width:10%;">Approved By</td>
-                                <td style="border-bottom: 1px solid #000;width: 15%;">Thomas Gachuki</td>
-                                <td style="width:10%;text-align: right;">Date</td>
-                                <td style="border-bottom: 1px solid #000;width: 15%;">
-                                    <?php echo strlen($this->distribution['finalized_at'])>10?substr($this->distribution['finalized_at'],0,10):''; ?>
+                            <tr>
+                                <td style="width:10%;"><b>Approved By</b></td>
+                                <td style="width: 15%;">Charity Maina
+                                    <br />QA Manager, DLS || KNEQAS PT Coordinator
+                                    <br />Department of National Laboratory Services
                                 </td>
-                                <td style="width: 10%;text-align: right;">Sign</td>
+                                <td style="width:10%;text-align: right;"><b>Date</b></td>
+                                <td style="width: 15%;">
+                                    <?php echo strlen($this->distribution['finalized_at']) > 10 ? substr($this->distribution['finalized_at'], 0, 10) : ''; ?>
+                                </td>
+                                <!-- <td style="width: 10%;text-align: right;">Sign</td> -->
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
