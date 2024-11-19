@@ -415,9 +415,7 @@ class Application_Model_DbTable_Distribution extends Zend_Db_Table_Abstract
         }
     }
 
-    public function shipDistribution($params)
-    {
-    }
+    public function shipDistribution($params) {}
 
     public function getDistributionDates()
     {
@@ -787,14 +785,87 @@ class Application_Model_DbTable_Distribution extends Zend_Db_Table_Abstract
 
     public function getPerformanceStats($shipmentID)
     {
-        $output = [];
-        $query = "SELECT rrv.sample_id, ref.reference_result, COUNT(*) population, AVG(ROUND(rrv.reported_viral_load,1)) average_rvl, ROUND(STDDEV_POP(rrv.reported_viral_load),1) sdev_rvl FROM shipment_participant_map spm INNER JOIN response_result_vl rrv ON spm.map_id = rrv.shipment_map_id INNER JOIN reference_result_vl ref ON spm.shipment_id = ref.shipment_id AND rrv.sample_id = ref.sample_id WHERE spm.shipment_id = $shipmentID AND ref.control = 0 AND spm.is_pt_test_not_performed IS NULL GROUP BY rrv.sample_id";
-        $rResult = $this->getAdapter()->fetchAll($query);
+        $summary = [
+            'enrolled' => 0,
+            'participated' => 0,
+            'satisfactory' => 0,
+            'unsatisfactory' => 0,
+        ];
+        $negativePositiveResult = ['Negative', 'Positive'];
 
-        foreach ($rResult as $row) {
-            $output[$row['sample_id']] = $row;
+        // enrolled          // shipment_participant_map
+        $enrolled_sql = "select spm.map_id, spm.participant_id, spm.platform_id from shipment ship
+              join shipment_participant_map spm on ship.shipment_id = spm.shipment_id
+              where ship.shipment_id = $shipmentID;";
+        $enrolled = $this->getAdapter()->fetchAll($enrolled_sql);
+        $summary['enrolled'] = count($enrolled);
+
+        // participated      // shipment_participant_map.attributes is not null and a record exists in response_result_eid
+        $participated_sql = "select spm.map_id
+            from shipment ship
+              join shipment_participant_map spm on ship.shipment_id = spm.shipment_id
+              where ship.shipment_id = $shipmentID and spm.attributes is not null;";
+
+        $participated = $this->getAdapter()->fetchAll($participated_sql);
+        $summary['participated'] = count($participated);
+
+        ///------------------------------------------------
+        $schemeService = new Application_Service_Schemes();
+        foreach ($enrolled as $enrolled_map) {
+            $participantID = $enrolled_map['participant_id'];
+            $platformID = $enrolled_map['platform_id'];
+            $assayID = 2;
+
+            $shipment = $schemeService->getShipmentData($shipmentID, $participantID, $platformID, $assayID);
+            $shipment['attributes'] = json_decode($shipment['attributes'], true);
+
+            $sampleCount = 0;
+            $correctCount = 0;
+            $failedCount = 0;
+
+            $allPlatformSamples = $schemeService->getAllVlPlatformResponses($shipmentID, $platformID, $assayID);
+            $allSamples = $schemeService->getVlSamples($shipmentID, $participantID, $platformID, $assayID);
+
+            $sampleList = [];
+            foreach ($allPlatformSamples as $platformSample) {
+                $sampleList[] = $platformSample['sample_id'];
+                $sampleValues[$platformSample['sample_id']][] = $platformSample['target'];
+            }
+
+            $sampleList = array_unique($sampleList);
+
+            $averagePerformance = [];
+            foreach ($sampleList as $sampleID) {
+                $avg = $schemeService->getAverage($sampleValues[$sampleID]);
+                $averagePerformance[$sampleID] = $avg;
+            }
+
+            foreach ($allSamples as $sample) {
+                if (isset($this->shipment['is_pt_test_not_performed']) && $shipment['is_pt_test_not_performed'] == 'yes') {
+                    $sample['mandatory'] = 0;
+                }
+                if ($sample['control'] == 1) {
+                    continue;
+                }
+
+                if ($sample['control'] == 0) {
+                    if ($negativePositiveResult[round($averagePerformance[$sample['sample_id']])] == $negativePositiveResult[intVal($sample['interpretation'])]) {
+                        $correctCount++;
+                    } else {
+                        $failedCount++;
+                    }
+                    $sampleCount++;
+                }
+            }
+
+            if ($correctCount / $sampleCount * 100 >= $shipment["pass_mark"]) {
+                $summary['satisfactory']++;
+            } else {
+                $summary['unsatisfactory']++;
+            }
         }
+        ///------------------------------------------------
 
-        return $output;
+        return $summary;
     }
 }

@@ -1,5 +1,18 @@
 <?php
 
+
+$platform_nm = $this->platform['PlatformName'];
+
+$shipment_id = $this->shipment['shipment_id'] ?? null;
+// summary
+$summary_stats = $this->performanceStats ?? [
+	'enrolled' => 0,
+	'participated' => 0,
+	'satisfactory' => 0,
+	'unsatisfactory' => 0,
+];
+
+
 require_once('tcpdf/tcpdf.php');
 // require_once('tcpdf_include.php');
 // create new PDF document
@@ -250,12 +263,17 @@ $html .= '</tr>';
 $html .= '</thead>';
 
 $html .= "<tbody>";
-$html .= '<tr>
-<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
-<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
-<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
-<td style="border:1px solid #000;text-align:center;"><strong></strong></td>
-</tr>';
+
+$html .= '<tr>';
+// <enrolled
+$html .= '<td style="border:1px solid #000000;">' . ($summary_stats['enrolled'] ?? 0) . '</td>';
+// <participated
+$html .= '<td style="border:1px solid #000000;">' . ($summary_stats['participated'] ?? 0) . '</td>';
+// <satisfactory
+$html .= '<td style="border:1px solid #000000;">' . ($summary_stats['satisfactory'] ?? 0) . '</td>';
+// <unsatisfactory
+$html .= '<td style="border:1px solid #000000;">' . ($summary_stats['unsatisfactory'] ?? 0) . '</td>';
+$html .= '</tr>';
 
 $html .= "</tbody>";
 $html .= "</table>";
