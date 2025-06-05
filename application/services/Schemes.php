@@ -99,7 +99,7 @@ class Application_Service_Schemes
             ->where('sp.participant_id = ? ', $participantID)
             ->where('sp.assay_id = ?', $assayID)
             // ->where('sp.platform_id = ? ', $platformID);
-            ->where('sp.platform_id in ? ', $platformIds);
+            ->where('sp.platform_id in (?) ', $platformIds);
         return $db->fetchAll($sql);
     }
 
