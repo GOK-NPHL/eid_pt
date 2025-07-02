@@ -352,8 +352,13 @@ $html2 .= '</tr>';
 $html2 .= '<tr>';
 $html2 .= '<td colspan="2">';
 $html2 .= '<ul style="list-style-type: none;">';
-$html2 .= '<li>Charity Maina</li>';
-$html2 .= '<li>QA Manager, DLS || KNEQAS PT Coordinator</li>';
+if($this->distribution['distribution_id'] > 12){
+	$html2 .= '<li>Solomon Bundi</li>';
+	$html2 .= '<li>KNEQAS EQA Manager</li>';
+}else{
+	$html2 .= '<li>Charity Maina</li>';
+	$html2 .= '<li>QA Manager, DLS || KNEQAS PT Coordinator</li>';
+}
 $html2 .= '<li>Department of National Laboratory Services</li>';
 $html2 .= '</ul>';
 $html2 .= '</td>';
@@ -395,7 +400,12 @@ $html2 .= '<tr><td colspan="3"><div style="height: 500px; width: 100%;">&nbsp;</
 $html2 .= '<tr><td colspan="3"><div style="height: 500px; width: 100%;">&nbsp;</div></td></tr>';
 $html2 .= '<tr><td colspan="3"><div style="height: 500px; width: 100%;">&nbsp;</div></td></tr>';
 $html2 .= '<tr>';
-$html2 .= '<td colspan="2" style="font-size:0.8em;">MOH/DLS/NPHL/QMS-3/KNEQAS/HIV/VL/F/02</td>';
+// $html2 .= '<td colspan="2" style="font-size:0.8em;">MOH/DLS/NPHL/QMS-3/KNEQAS/HIV/EID/F/02</td>';
+if($this->distribution['distribution_id'] > 12){
+	$html2 .= '<td colspan="2" style="font-size:0.8em;">MOH/DNLS/NPHL/QMS-3/KNEQAS/HIV/EID/F/02 &nbsp; &nbsp; Version 2.0 &nbsp; &nbsp; Effective: 02/06/2025</td>';
+} else {
+	$html2 .= '<td colspan="2" style="font-size:0.8em;">MOH/DLS/NPHL/QMS-3/KNEQAS/HIV/EID/F/02</td>';
+}
 $html2 .= '<td style="font-size:0.8em;" align="center">Page 2 of 2</td>';
 $html2 .= '</tr></table>';
 $html2 .= '</div>';

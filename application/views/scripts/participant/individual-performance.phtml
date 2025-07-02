@@ -26,7 +26,7 @@
                             <?php $scheme = ['1' => "VL", '2' => "EID"]; ?>
                             NATIONAL PUBLIC HEALTH LABORATORY<br>
                             KENYA EXTERNAL QUALITY ASSESSMENT SCHEME (KNEQAS)<br>
-                            HIV MOLECULAR - <?php echo $scheme[$this->assayID]; ?> PROFICIENCY TESTING<br>
+                            HIV MOLECULAR - EID PROFICIENCY TESTING<br>
                             P.O Box 20750 - 00202 NAIROBI Email: nphlpt@nphl.go.ke Help Desk: helpdesk.nphl.go.ke<br>
                             <span style="font-size: 1.5em;">
                             <?php
@@ -329,10 +329,17 @@
                             <tr>
                             <tr>
                                 <td style="width:10%;"><b>Approved By</b></td>
-                                <td style="width: 15%;">Charity Maina
-                                    <br />QA Manager, DLS || KNEQAS PT Coordinator
-                                    <br />Department of National Laboratory Services
-                                </td>
+                                <?php if($this->distribution['distribution_id'] > 12){ ?>
+                                    <td style="width: 15%;">Solomon Bundi
+                                        <br />KNEQAS EQA Manager
+                                        <br />Department of National Laboratory Services
+                                    </td>
+                                <?php }else{ ?>
+                                    <td style="width: 15%;">Charity Maina
+                                        <br />QA Manager, DLS || KNEQAS PT Coordinator
+                                        <br />Department of National Laboratory Services
+                                    </td>
+                                <?php } ?>
                                 <td style="width:10%;text-align: right;"><b>Date</b></td>
                                 <td style="width: 15%;">
                                     <?php echo strlen($this->distribution['finalized_at']) > 10 ? substr($this->distribution['finalized_at'], 0, 10) : ''; ?>
